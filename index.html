@@ -32,11 +32,7 @@
             <p>Crea, organizza e aggiorna i tuoi campionati.</p>
           </div>
         </div>
-
-        <div class="auth-card" id="auth-card">
-          <!-- generata da app.js: login / registrazione -->
-        </div>
-
+        <div class="auth-card" id="auth-card"></div>
         <div class="auth-link-gruppo">
           <button id="btn-ospite" class="link-ospite">Continua senza account</button>
           <button id="btn-reset-dati" class="link-reset">Problemi ad accedere? Cancella i dati locali</button>
@@ -66,10 +62,9 @@
               <span class="eyebrow">I tuoi campionati</span>
               <h1>Dashboard</h1>
             </div>
-            <button id="btn-nuovo-torneo" class="btn btn-primario">
-              <i class="fa-solid fa-plus"></i> Nuovo torneo
-            </button>
+            <button id="btn-nuovo-torneo" class="btn btn-primario"><i class="fa-solid fa-plus"></i> Nuovo torneo</button>
           </div>
+          <div id="dashboard-ricerca-contenitore"></div>
           <div id="lista-tornei" class="griglia-tornei"></div>
         </section>
 
@@ -85,8 +80,9 @@
               <div id="torneo-sidebar-titolo"></div>
               <button class="tab-torneo" data-tab="classifica"><i class="fa-solid fa-ranking-star"></i> Classifica</button>
               <button class="tab-torneo" data-tab="calendario"><i class="fa-solid fa-calendar-days"></i> Calendario</button>
-              <button class="tab-torneo" data-tab="squadre"><i class="fa-solid fa-people-group"></i> Squadre</button>
-              <button class="tab-torneo" data-tab="statistiche"><i class="fa-solid fa-chart-simple"></i> Statistiche</button>
+              <button class="tab-torneo" data-tab="squadre"><i class="fa-solid fa-shield-halved"></i> Squadre</button>
+              <button class="tab-torneo" data-tab="giocatori"><i class="fa-solid fa-person-running"></i> Giocatori</button>
+              <button class="tab-torneo" data-tab="classifiche"><i class="fa-solid fa-chart-simple"></i> Classifiche</button>
               <button class="tab-torneo" data-tab="impostazioni"><i class="fa-solid fa-gear"></i> Impostazioni</button>
               <button id="btn-torna-dashboard"><i class="fa-solid fa-arrow-left"></i> Tutti i tornei</button>
             </nav>
@@ -98,21 +94,33 @@
     </div>
   </div>
 
-  <!-- ============ MODALE: inserisci risultato ============ -->
-  <div id="modale-risultato" class="overlay">
+  <!-- ============ MODALE: gestione partita ============ -->
+  <div id="modale-partita" class="overlay">
     <div class="modale-card">
-      <i class="fa-solid fa-xmark modale-chiudi" id="chiudi-modale-risultato"></i>
-      <div id="modale-risultato-contenuto"></div>
+      <i class="fa-solid fa-xmark modale-chiudi" id="chiudi-modale-partita"></i>
+      <div id="modale-partita-contenuto"></div>
     </div>
   </div>
 
-  <!-- ============ Contenitore avvisi (toast) ============ -->
   <div id="toast-contenitore"></div>
 
-  <script src="storage.js"></script>
-  <script src="auth.js"></script>
-  <script src="scheduler.js"></script>
-  <script src="tornei.js"></script>
-  <script src="app.js"></script>
+  <script src="core-storage.js"></script>
+  <script src="core-auth.js"></script>
+  <script src="core-utils.js"></script>
+  <script src="formati-registry.js"></script>
+  <script src="formato-campionato.js"></script>
+  <script src="formato-gironi.js"></script>
+  <script src="formato-eliminazione.js"></script>
+  <script src="formato-mista.js"></script>
+  <script src="dati-statistiche.js"></script>
+  <script src="dati-tornei.js"></script>
+  <script src="app-core.js"></script>
+  <script src="app-auth.js"></script>
+  <script src="app-dashboard.js"></script>
+  <script src="app-wizard.js"></script>
+  <script src="app-torneo.js"></script>
+  <script src="app-squadre.js"></script>
+  <script src="app-classifiche.js"></script>
+  <script src="app-partita.js"></script>
 </body>
 </html>
