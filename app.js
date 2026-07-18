@@ -749,6 +749,16 @@ document.addEventListener("DOMContentLoaded", () => {
     entraNellApp();
   });
 
+  document.getElementById("btn-reset-dati").addEventListener("click", () => {
+    const ok = confirm(
+      "Questo cancella TUTTI gli account e i tornei salvati su questo browser (non è recuperabile). Continuare?"
+    );
+    if(!ok) return;
+    localStorage.removeItem("gestoreTornei_v1");
+    mostraToast("Dati locali cancellati.");
+    setTimeout(() => location.reload(), 600);
+  });
+
   document.getElementById("btn-logout").addEventListener("click", () => {
     Auth.esci();
     Stato.authModo = "login";

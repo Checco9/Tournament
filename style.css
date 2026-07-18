@@ -188,6 +188,16 @@ input:focus, select:focus, button:focus-visible{
   text-decoration: underline;
   cursor: pointer;
 }
+.link-reset{
+  background: none; border: none;
+  color: var(--ink-faint);
+  font-size: 0.74rem;
+  opacity: 0.7;
+  cursor: pointer;
+  margin-top: -8px;
+}
+.link-reset:hover{ opacity: 1; color: var(--danger); }
+.auth-link-gruppo{ display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
 /* ============================================================
    SHELL APP (header comune)
