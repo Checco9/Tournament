@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gestore Tornei</title>
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#12161C">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ============ AUTENTICAZIONE ============ -->
+    <section id="vista-auth" class="vista">
+      <div class="auth-scena">
+        <div class="auth-marchio">
+          <span class="auth-marchio-badge">GT</span>
+          <div>
+            <h1>Gestore Tornei</h1>
+            <p>Crea, organizza e aggiorna i tuoi campionati.</p>
+          </div>
+        </div>
+
+        <div class="auth-card" id="auth-card">
+          <!-- generata da app.js: login / registrazione -->
+        </div>
+
+        <button id="btn-ospite" class="link-ospite">Continua senza account</button>
+      </div>
+    </section>
+
+    <!-- ============ APP (dashboard / wizard / torneo) ============ -->
+    <div id="shell" class="vista">
+      <header id="header-app">
+        <div class="brand" id="btn-brand">
+          <span class="brand-badge">GT</span>
+          <span class="brand-nome">Gestore Tornei</span>
+        </div>
+        <div id="utente-info">
+          <span id="nome-utente"></span>
+          <button id="btn-logout" class="btn btn-testo">Esci</button>
+        </div>
+      </header>
+
+      <main id="main-app">
+
+        <!-- ---- DASHBOARD ---- -->
+        <section id="vista-dashboard" class="sotto-vista">
+          <div class="dashboard-testata">
+            <div>
+              <span class="eyebrow">I tuoi campionati</span>
+              <h1>Dashboard</h1>
+            </div>
+            <button id="btn-nuovo-torneo" class="btn btn-primario">
+              <i class="fa-solid fa-plus"></i> Nuovo torneo
+            </button>
+          </div>
+          <div id="lista-tornei" class="griglia-tornei"></div>
+        </section>
+
+        <!-- ---- WIZARD CREAZIONE TORNEO ---- -->
+        <section id="vista-wizard" class="sotto-vista">
+          <div id="wizard-contenuto"></div>
+        </section>
+
+        <!-- ---- GESTIONE TORNEO ---- -->
+        <section id="vista-torneo" class="sotto-vista">
+          <div id="torneo-layout">
+            <nav id="torneo-sidebar">
+              <div id="torneo-sidebar-titolo"></div>
+              <button class="tab-torneo" data-tab="classifica"><i class="fa-solid fa-ranking-star"></i> Classifica</button>
+              <button class="tab-torneo" data-tab="calendario"><i class="fa-solid fa-calendar-days"></i> Calendario</button>
+              <button class="tab-torneo" data-tab="squadre"><i class="fa-solid fa-people-group"></i> Squadre</button>
+              <button class="tab-torneo" data-tab="statistiche"><i class="fa-solid fa-chart-simple"></i> Statistiche</button>
+              <button class="tab-torneo" data-tab="impostazioni"><i class="fa-solid fa-gear"></i> Impostazioni</button>
+              <button id="btn-torna-dashboard"><i class="fa-solid fa-arrow-left"></i> Tutti i tornei</button>
+            </nav>
+            <div id="torneo-contenuto"></div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ============ MODALE: inserisci risultato ============ -->
+  <div id="modale-risultato" class="overlay">
+    <div class="modale-card">
+      <i class="fa-solid fa-xmark modale-chiudi" id="chiudi-modale-risultato"></i>
+      <div id="modale-risultato-contenuto"></div>
+    </div>
+  </div>
+
+  <!-- ============ Contenitore avvisi (toast) ============ -->
+  <div id="toast-contenitore"></div>
+
+  <script src="storage.js"></script>
+  <script src="auth.js"></script>
+  <script src="scheduler.js"></script>
+  <script src="tornei.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
