@@ -45,12 +45,17 @@ const Tornei = (() => {
       durataPartitaMinuti: dati.durataPartitaMinuti || 90,
       squadre: [],
       giocatori: [],
+      staff: [],
+      campi: [],
+      news: [],
+      analytics: { visualizzazioniGiocatori: {}, visualizzazioniSquadre: {} },
+      sponsor: dati.sponsor || null,   // { nome, logo, link }
       partite: [],
       creatoIl: new Date().toISOString()
     };
 
     const squadre = (dati.squadreNomi || []).map(n => ({
-      id: DB.generaId("squadra"), nome: n.trim(), logo: null, colore: "#12161C", allenatore: ""
+      id: DB.generaId("squadra"), nome: n.trim(), logo: null, colore: "#12161C", allenatore: "", squadraGlobaleId: null
     }));
     nuovoTorneo.squadre = squadre;
 
@@ -100,7 +105,8 @@ const Tornei = (() => {
     if(!torneo) return null;
     const squadra = {
       id: DB.generaId("squadra"), nome: dati.nome.trim(),
-      logo: dati.logo || null, colore: dati.colore || "#12161C", allenatore: dati.allenatore || ""
+      logo: dati.logo || null, colore: dati.colore || "#12161C", allenatore: dati.allenatore || "",
+      squadraGlobaleId: dati.squadraGlobaleId || null
     };
     torneo.squadre.push(squadra);
     salva(torneo);
@@ -123,6 +129,147 @@ const Tornei = (() => {
     torneo.giocatori = torneo.giocatori.filter(g => g.squadraId !== squadraId);
     torneo.partite = torneo.partite.filter(p => p.casaId !== squadraId && p.trasfertaId !== squadraId);
     return salva(torneo);
+  }
+
+  /* ---------------- Staff (arbitri, dirigenti, ecc.) ---------------- */
+
+  function aggiungiStaff(torneoId, dati){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return null;
+    if(!torneo.staff) torneo.staff = [];
+    const membro = {
+      id: DB.generaId("staff"), nome: dati.nome.trim(), ruolo: dati.ruolo || "",
+      telefono: dati.telefono || "", email: dati.email || "", foto: dati.foto || null
+    };
+    torneo.staff.push(membro);
+    salva(torneo);
+    return membro;
+  }
+
+  function aggiornaStaff(torneoId, staffId, dati){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return false;
+    const m = (torneo.staff || []).find(s => s.id === staffId);
+    if(!m) return false;
+    Object.assign(m, dati);
+    return salva(torneo);
+  }
+
+  function eliminaStaff(torneoId, staffId){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return false;
+    torneo.staff = (torneo.staff || []).filter(s => s.id !== staffId);
+    torneo.partite.forEach(p => { if(p.arbitroStaffId === staffId) p.arbitroStaffId = null; });
+    return salva(torneo);
+  }
+
+  /* ---------------- Campi ---------------- */
+
+  function aggiungiCampo(torneoId, dati){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return null;
+    if(!torneo.campi) torneo.campi = [];
+    const campo = {
+      id: DB.generaId("campo"), nome: dati.nome.trim(),
+      indirizzo: dati.indirizzo || "", note: dati.note || ""
+    };
+    torneo.campi.push(campo);
+    salva(torneo);
+    return campo;
+  }
+
+  function aggiornaCampo(torneoId, campoId, dati){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return false;
+    const c = (torneo.campi || []).find(x => x.id === campoId);
+    if(!c) return false;
+    Object.assign(c, dati);
+    return salva(torneo);
+  }
+
+  function eliminaCampo(torneoId, campoId){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return false;
+    torneo.campi = (torneo.campi || []).filter(c => c.id !== campoId);
+    return salva(torneo);
+  }
+
+  /* ---------------- News (aggiornamenti, tipo bacheca) ---------------- */
+
+  function aggiungiNews(torneoId, dati){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return null;
+    if(!torneo.news) torneo.news = [];
+    const post = {
+      id: DB.generaId("news"),
+      testo: dati.testo.trim(),
+      immagine: dati.immagine || null,
+      linkVideo: dati.linkVideo || "",
+      partitaId: dati.partitaId || null,
+      dataCreazione: new Date().toISOString(),
+      commenti: []
+    };
+    torneo.news.unshift(post); // più recente in cima
+    salva(torneo);
+    return post;
+  }
+
+  function eliminaNews(torneoId, newsId){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return false;
+    torneo.news = (torneo.news || []).filter(n => n.id !== newsId);
+    return salva(torneo);
+  }
+
+  function aggiungiCommento(torneoId, newsId, { nome, testo }){
+    const torneo = ottieni(torneoId);
+    const post = torneo && (torneo.news || []).find(n => n.id === newsId);
+    if(!post) return null;
+    const commento = {
+      id: DB.generaId("commento"), nome: (nome || "Anonimo").trim() || "Anonimo",
+      testo: testo.trim(), dataCreazione: new Date().toISOString()
+    };
+    post.commenti.push(commento);
+    salva(torneo);
+    return commento;
+  }
+
+  function eliminaCommento(torneoId, newsId, commentoId){
+    const torneo = ottieni(torneoId);
+    const post = torneo && (torneo.news || []).find(n => n.id === newsId);
+    if(!post) return false;
+    post.commenti = post.commenti.filter(c => c.id !== commentoId);
+    return salva(torneo);
+  }
+
+  /* Voto "MVP dei tifosi": indicativo, non sostituisce la scelta ufficiale
+     dell'organizzatore (partita.mvpGiocatoreId). Un conteggio semplice per
+     giocatore, salvato sulla partita stessa. */
+  function votaMvpTifosi(torneoId, partitaId, giocatoreId){
+    const torneo = ottieni(torneoId);
+    const partita = torneo && ottieniPartita(torneo, partitaId);
+    if(!partita) return false;
+    if(!partita.votiMvpTifosi) partita.votiMvpTifosi = {};
+    partita.votiMvpTifosi[giocatoreId] = (partita.votiMvpTifosi[giocatoreId] || 0) + 1;
+    return salva(torneo);
+  }
+
+  /* ---------------- Analytics (visualizzazioni) ---------------- */
+
+  function tracciaVisualizzazioneGiocatore(torneoId, giocatoreId){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return;
+    if(!torneo.analytics) torneo.analytics = { visualizzazioniGiocatori: {}, visualizzazioniSquadre: {} };
+    torneo.analytics.visualizzazioniGiocatori[giocatoreId] = (torneo.analytics.visualizzazioniGiocatori[giocatoreId] || 0) + 1;
+    salva(torneo);
+  }
+
+  function tracciaVisualizzazioneSquadra(torneoId, squadraId){
+    const torneo = ottieni(torneoId);
+    if(!torneo) return;
+    if(!torneo.analytics) torneo.analytics = { visualizzazioniGiocatori: {}, visualizzazioniSquadre: {} };
+    torneo.analytics.visualizzazioniSquadre[squadraId] = (torneo.analytics.visualizzazioniSquadre[squadraId] || 0) + 1;
+    salva(torneo);
   }
 
   /* ---------------- Giocatori ---------------- */
@@ -307,6 +454,10 @@ const Tornei = (() => {
     torneiUtente, ottieni, salva, crea, elimina,
     preferitiUtente, isPreferito, toggleFavorito,
     aggiungiSquadra, aggiornaSquadra, eliminaSquadra,
+    aggiungiStaff, aggiornaStaff, eliminaStaff,
+    aggiungiCampo, aggiornaCampo, eliminaCampo,
+    aggiungiNews, eliminaNews, aggiungiCommento, eliminaCommento, votaMvpTifosi,
+    tracciaVisualizzazioneGiocatore, tracciaVisualizzazioneSquadra,
     giocatoriSquadra, aggiungiGiocatore, aggiornaGiocatore, eliminaGiocatore,
     ottieniPartita, aggiungiPartitaManuale, creaPartitaVuota, eliminaPartita,
     aggiornaInfoPartita, rinviaPartita, ripristinaProgrammata,

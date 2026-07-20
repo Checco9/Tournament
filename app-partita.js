@@ -59,8 +59,16 @@ function renderModalePartita(){
     <div class="sezione-modale">
       <h4>Informazioni</h4>
       <div class="campo-riga">
-        <div class="campo"><label style="font-weight:400;">Campo</label><input type="text" id="mp-campo" value="${escapeHtml(partita.campo || "")}" placeholder="es. Campo 1"></div>
-        <div class="campo"><label style="font-weight:400;">Arbitro</label><input type="text" id="mp-arbitro" value="${escapeHtml(partita.arbitro || "")}" placeholder="Nome arbitro"></div>
+        <div class="campo">
+          <label style="font-weight:400;">Campo</label>
+          <input type="text" id="mp-campo" list="lista-campi-torneo" value="${escapeHtml(partita.campo || "")}" placeholder="es. Campo 1">
+          <datalist id="lista-campi-torneo">${(torneo.campi || []).map(c => `<option value="${escapeHtml(c.nome)}">`).join("")}</datalist>
+        </div>
+        <div class="campo">
+          <label style="font-weight:400;">Arbitro</label>
+          <input type="text" id="mp-arbitro" list="lista-arbitri-torneo" value="${escapeHtml(partita.arbitro || "")}" placeholder="Nome arbitro">
+          <datalist id="lista-arbitri-torneo">${(torneo.staff || []).map(m => `<option value="${escapeHtml(m.nome)}">`).join("")}</datalist>
+        </div>
       </div>
       <div class="campo-riga">
         <div class="campo"><label style="font-weight:400;">Data e ora</label><input type="datetime-local" id="mp-data" value="${partita.dataOra ? partita.dataOra.slice(0, 16) : ""}"></div>

@@ -135,6 +135,9 @@ input:focus, select:focus, button:focus-visible{ outline: 2px solid var(--accent
   font-family: var(--font-mono); font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
 }
 .brand-nome{ font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; }
+#nav-header-link{ flex: 1; display: flex; justify-content: center; }
+#nav-header-link .btn-testo{ color: rgba(255,255,255,0.75); font-size: 0.85rem; }
+#nav-header-link .btn-testo:hover{ color: #fff; }
 #utente-info{ display: flex; align-items: center; gap: 12px; }
 #nome-utente{ font-size: 0.85rem; color: rgba(255,255,255,0.75); }
 #utente-info .btn-testo{ color: rgba(255,255,255,0.8); }
@@ -297,8 +300,16 @@ input:focus, select:focus, button:focus-visible{ outline: 2px solid var(--accent
 .anteprima-logo-piccola{ width: 40px; height: 40px; border-radius: 50%; background: var(--paper); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; color: var(--ink-soft); cursor: pointer; flex: none; }
 .anteprima-logo-piccola img{ width: 100%; height: 100%; object-fit: cover; }
 .riga-logo-nome input[type="text"]{ flex: 1; font-weight: 600; }
-.riga-azioni-squadra{ display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.riga-azioni-squadra{ display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+.riga-azioni-squadra .btn-testo{ font-size: 0.78rem; padding: 4px 6px; }
 .conteggio-rosa{ font-size: 0.76rem; color: var(--ink-faint); }
+
+.card-squadra-globale{ cursor: pointer; transition: border-color .15s ease, transform .15s ease; }
+.card-squadra-globale:hover{ border-color: var(--accent); transform: translateY(-2px); }
+
+.toggle-vista-giocatori{ display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 100px; padding: 3px; margin-bottom: 18px; gap: 2px; }
+.toggle-opzione{ background: none; border: none; padding: 8px 16px; border-radius: 100px; font-size: 0.82rem; color: var(--ink-soft); cursor: pointer; }
+.toggle-opzione.attivo{ background: var(--ink); color: #fff; }
 
 /* ---------- giocatori ---------- */
 .griglia-giocatori{ display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 18px; }
@@ -383,6 +394,85 @@ input:focus, select:focus, button:focus-visible{ outline: 2px solid var(--accent
 .sotto-vista.attiva{ animation: entrataPagina .3s ease; }
 
 /* ============================================================
+   CAMPI (con mappa)
+   ============================================================ */
+.griglia-campi{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card-campo{ background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); }
+.card-campo-info{ padding: 16px 18px; }
+.card-campo-info h3{ font-size: 1rem; margin-bottom: 6px; }
+.indirizzo-campo{ font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 4px; }
+.note-campo{ font-size: 0.8rem; color: var(--ink-faint); margin-bottom: 10px; }
+.card-campo-info .elimina-campo{ font-size: 0.76rem; padding: 4px 0; }
+.mappa-campo{ width: 100%; height: 200px; background: var(--paper); }
+.mappa-campo iframe{ width: 100%; height: 100%; border: none; display: block; }
+.mappa-vuota{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink-faint); font-size: 0.78rem; }
+.mappa-vuota i{ font-size: 1.4rem; }
+
+/* ============================================================
+   NEWS (feed)
+   ============================================================ */
+textarea{
+  width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); font-family: var(--font-body); font-size: 0.92rem; color: var(--ink); resize: vertical;
+}
+.feed-news{ display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+.post-news{ background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-card); }
+.post-news-header{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.post-news-data{ font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-faint); }
+.post-news-testo{ font-size: 0.92rem; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
+.post-news-immagine{ width: 100%; border-radius: var(--radius-md); margin-bottom: 12px; }
+.video-embed{ position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-md); margin-bottom: 12px; }
+.video-embed iframe{ position: absolute; top:0; left:0; width: 100%; height: 100%; border: none; }
+.link-video-esterno{ display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--paper); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; color: var(--ink); text-decoration: none; margin-bottom: 12px; }
+.link-video-esterno:hover{ background: var(--accent-soft); color: var(--accent-dark); }
+
+.riquadro-mvp-tifosi{ background: var(--paper); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px; }
+.riquadro-mvp-tifosi h4{ font-size: 0.8rem; margin-bottom: 8px; color: var(--ink); }
+.mvp-ufficiale-badge{ font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 10px; }
+.lista-voti-mvp{ display: flex; flex-direction: column; gap: 6px; }
+.btn-voto-mvp{
+  display: flex; align-items: center; gap: 10px; width: 100%; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 8px 12px; cursor: pointer; text-align: left;
+}
+.btn-voto-mvp:disabled{ cursor: default; opacity: 0.85; }
+.btn-voto-mvp:not(:disabled):hover{ border-color: var(--accent); }
+.nome-voto{ font-size: 0.82rem; font-weight: 600; width: 90px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barra-voto{ flex: 1; height: 8px; background: var(--line); border-radius: 100px; overflow: hidden; }
+.barra-voto-riempimento{ display: block; height: 100%; background: var(--accent); border-radius: 100px; transition: width .3s ease; }
+.conteggio-voto{ font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-faint); width: 20px; text-align: right; flex: none; }
+
+.post-news-commenti{ border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
+.commento{ display: flex; gap: 6px; font-size: 0.82rem; margin-bottom: 6px; flex-wrap: wrap; }
+.commento-nome{ font-weight: 700; flex: none; }
+.commento-testo{ color: var(--ink-soft); }
+.form-commento{ display: flex; gap: 6px; margin-top: 10px; }
+.form-commento .commento-nome-input{ flex: 0.6; }
+.form-commento .commento-testo-input{ flex: 1.4; }
+.form-commento input{ padding: 8px 10px; font-size: 0.82rem; }
+.btn-invia-commento{ background: var(--ink); color: #fff; border: none; border-radius: var(--radius-sm); padding: 0 14px; cursor: pointer; flex: none; }
+.btn-invia-commento:hover{ background: var(--accent-dark); }
+
+/* ============================================================
+   SPONSOR e ANALYTICS
+   ============================================================ */
+.banner-sponsor{
+  display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
+  text-decoration: none; color: inherit; transition: border-color .15s ease;
+}
+.banner-sponsor:hover{ border-color: var(--accent); }
+.banner-sponsor img{ width: 28px; height: 28px; border-radius: 6px; object-fit: cover; flex: none; }
+.banner-sponsor i{ font-size: 1.1rem; color: var(--ink-faint); width: 28px; text-align: center; flex: none; }
+.sponsor-etichetta{ display: block; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); }
+.sponsor-nome{ display: block; font-size: 0.8rem; font-weight: 600; }
+
+.contatore-visualizzazioni{ font-size: 0.74rem; color: var(--ink-faint); display: inline-flex; align-items: center; gap: 5px; }
+
+@media (max-width: 520px){
+  .form-commento{ flex-direction: column; }
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 860px){
@@ -391,6 +481,7 @@ input:focus, select:focus, button:focus-visible{ outline: 2px solid var(--accent
   #torneo-sidebar-titolo{ display: none; }
   .tab-torneo{ flex: none; white-space: nowrap; }
   #btn-torna-dashboard{ margin: 0; padding: 10px 12px; border: none; flex: none; white-space: nowrap; }
+  #sponsor-sidebar{ display: none; }
   .tabella-dati{ font-size: 0.78rem; }
   .tabella-dati th, .tabella-dati td{ padding: 10px 6px; }
   .riga-partita .squadre{ order: 3; width: 100%; }

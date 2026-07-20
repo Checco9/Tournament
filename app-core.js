@@ -12,7 +12,8 @@ const Stato = {
   ricercaDashboard: "",
   wizard: null,
   squadraGiocatori: null,
-  tabClassificaIndividuale: "marcatori",
+  vistaGiocatoriTab: "rose",  // "rose" | "staff"
+  tabStatistiche: "marcatori",
   modale: { torneoId: null, partitaId: null, eventi: [], formazioni: {} }
 };
 
@@ -24,7 +25,7 @@ function mostraVista(id){
 }
 
 function mostraSottoVista(nome){
-  ["dashboard", "wizard", "torneo"].forEach(n => {
+  ["dashboard", "wizard", "torneo", "squadre-globali"].forEach(n => {
     document.getElementById("vista-" + n).classList.toggle("attiva", n === nome);
   });
 }
@@ -56,6 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btn-nuovo-torneo").addEventListener("click", apriWizard);
+
+  document.getElementById("btn-nav-squadre-globali").addEventListener("click", () => {
+    mostraSottoVista("squadre-globali");
+    renderSquadreGlobali();
+  });
 
   document.querySelectorAll(".tab-torneo").forEach(btn => {
     btn.addEventListener("click", () => {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Gestore Tornei</title>
+  <title>Trophy</title>
 
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -26,9 +26,9 @@
     <section id="vista-auth" class="vista">
       <div class="auth-scena">
         <div class="auth-marchio">
-          <span class="auth-marchio-badge">GT</span>
+          <span class="auth-marchio-badge"><i class="fa-solid fa-trophy"></i></span>
           <div>
-            <h1>Gestore Tornei</h1>
+            <h1>Trophy</h1>
             <p>Crea, organizza e aggiorna i tuoi campionati.</p>
           </div>
         </div>
@@ -44,9 +44,12 @@
     <div id="shell" class="vista">
       <header id="header-app">
         <div class="brand" id="btn-brand">
-          <span class="brand-badge">GT</span>
-          <span class="brand-nome">Gestore Tornei</span>
+          <span class="brand-badge"><i class="fa-solid fa-trophy"></i></span>
+          <span class="brand-nome">Trophy</span>
         </div>
+        <nav id="nav-header-link">
+          <button id="btn-nav-squadre-globali" class="btn btn-testo"><i class="fa-solid fa-people-roof"></i> Le mie squadre</button>
+        </nav>
         <div id="utente-info">
           <span id="nome-utente"></span>
           <button id="btn-logout" class="btn btn-testo">Esci</button>
@@ -82,12 +85,30 @@
               <button class="tab-torneo" data-tab="calendario"><i class="fa-solid fa-calendar-days"></i> Calendario</button>
               <button class="tab-torneo" data-tab="squadre"><i class="fa-solid fa-shield-halved"></i> Squadre</button>
               <button class="tab-torneo" data-tab="giocatori"><i class="fa-solid fa-person-running"></i> Giocatori</button>
-              <button class="tab-torneo" data-tab="classifiche"><i class="fa-solid fa-chart-simple"></i> Classifiche</button>
+              <button class="tab-torneo" data-tab="campi"><i class="fa-solid fa-location-dot"></i> Campi</button>
+              <button class="tab-torneo" data-tab="news"><i class="fa-solid fa-newspaper"></i> News</button>
+              <button class="tab-torneo" data-tab="statistiche"><i class="fa-solid fa-chart-simple"></i> Statistiche</button>
               <button class="tab-torneo" data-tab="impostazioni"><i class="fa-solid fa-gear"></i> Impostazioni</button>
               <button id="btn-torna-dashboard"><i class="fa-solid fa-arrow-left"></i> Tutti i tornei</button>
+              <div id="sponsor-sidebar"></div>
             </nav>
             <div id="torneo-contenuto"></div>
           </div>
+        </section>
+
+        <!-- ---- LE MIE SQUADRE (cross-torneo) ---- -->
+        <section id="vista-squadre-globali" class="sotto-vista">
+          <div class="dashboard-testata">
+            <div>
+              <span class="eyebrow">Statistiche all-time</span>
+              <h1>Le mie squadre</h1>
+            </div>
+            <button id="btn-nuova-squadra-globale" class="btn btn-primario"><i class="fa-solid fa-plus"></i> Nuova squadra</button>
+          </div>
+          <p class="sottotitolo" style="margin-bottom:20px; max-width:640px;">
+            Collega qui le squadre che partecipano a più tornei, per tenere un'unica storia e statistiche complessive tra un campionato e l'altro.
+          </p>
+          <div id="lista-squadre-globali" class="griglia-squadre-estesa"></div>
         </section>
 
       </main>
@@ -114,13 +135,17 @@
   <script src="formato-mista.js"></script>
   <script src="dati-statistiche.js"></script>
   <script src="dati-tornei.js"></script>
+  <script src="dati-squadre-globali.js"></script>
   <script src="app-core.js"></script>
   <script src="app-auth.js"></script>
   <script src="app-dashboard.js"></script>
   <script src="app-wizard.js"></script>
   <script src="app-torneo.js"></script>
   <script src="app-squadre.js"></script>
-  <script src="app-classifiche.js"></script>
+  <script src="app-squadre-globali.js"></script>
+  <script src="app-campi.js"></script>
+  <script src="app-news.js"></script>
+  <script src="app-statistiche.js"></script>
   <script src="app-partita.js"></script>
 </body>
 </html>
