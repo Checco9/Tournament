@@ -13,7 +13,8 @@ function apriWizard(){
     opzioni: { andataRitorno: false, numeroGironi: 2, qualificatiPerGirone: 2, spareggio: "rigori" },
     puntiVittoria: 3, puntiPareggio: 1, puntiSconfitta: 0,
     numeroTitolari: 11, durataPartitaMinuti: 90, criterioSpareggio: "differenza_reti",
-    squadre: ["", ""]
+    squadre: ["", ""],
+    sponsorAttivo: false, sponsorNome: "", sponsorLogo: null, sponsorLink: ""
   };
   mostraSottoVista("wizard");
   renderWizard();
@@ -21,12 +22,12 @@ function apriWizard(){
 
 function renderWizard(){
   const w = Stato.wizard;
-  const totalePassi = 5;
+  const totalePassi = 6;
   const passiHTML = Array.from({ length: totalePassi }, (_, i) => i + 1).map(n =>
     `<div class="wizard-passo ${n < w.passo ? "fatto" : (n === w.passo ? "attivo" : "")}"></div>`
   ).join("");
 
-  const corpi = { 1: wizardPasso1, 2: wizardPasso2, 3: wizardPasso3, 4: wizardPasso4, 5: wizardPasso5 };
+  const corpi = { 1: wizardPasso1, 2: wizardPasso2, 3: wizardPasso3, 4: wizardPasso4, 5: wizardPasso5, 6: wizardPasso6 };
   document.getElementById("wizard-contenuto").innerHTML = `
     <div class="wizard-passi">${passiHTML}</div>
     <div class="wizard-card">${corpi[w.passo](w)}</div>`;
@@ -37,7 +38,7 @@ function renderWizard(){
 function wizardPasso1(w){
   return `
     <h2>Informazioni di base</h2>
-    <p class="sottotitolo">Passo 1 di 5</p>
+    <p class="sottotitolo">Passo 1 di 6</p>
     <div class="campo">
       <label>Nome del torneo</label>
       <input type="text" id="w-nome" value="${escapeHtml(w.nome)}" placeholder="Es. Campionato di classe 2026">
@@ -98,7 +99,7 @@ function wizardPasso2(w){
 
   return `
     <h2>Formato del torneo</h2>
-    <p class="sottotitolo">Passo 2 di 5</p>
+    <p class="sottotitolo">Passo 2 di 6</p>
     <div class="scelta-formato">
       ${opzioni.map(o => `
         <label class="opzione ${w.formato === o.chiave ? "selezionata" : ""}">
@@ -127,7 +128,7 @@ function spareggioSelectHTML(w){
 function wizardPasso3(w){
   return `
     <h2>Regole del torneo</h2>
-    <p class="sottotitolo">Passo 3 di 5</p>
+    <p class="sottotitolo">Passo 3 di 6</p>
     <div class="campo">
       <label>Punteggio in classifica</label>
       <div class="campo-riga">
@@ -157,7 +158,7 @@ function wizardPasso3(w){
 function wizardPasso4(w){
   return `
     <h2>Squadre partecipanti</h2>
-    <p class="sottotitolo">Passo 4 di 5 — aggiungi almeno due squadre (potrai aggiungerne altre dopo)</p>
+    <p class="sottotitolo">Passo 4 di 6 — aggiungi almeno due squadre (potrai aggiungerne altre dopo)</p>
     <div class="elenco-squadre-wizard" id="w-elenco-squadre">
       ${w.squadre.map((nome, i) => `
         <div class="riga-squadra-wizard">
@@ -173,11 +174,36 @@ function wizardPasso4(w){
 }
 
 function wizardPasso5(w){
+  return `
+    <h2>Sponsor (facoltativo)</h2>
+    <p class="sottotitolo">Passo 5 di 6 — un banner discreto, visibile senza disturbare chi consulta il torneo</p>
+    <label class="opzione-inline" style="margin-bottom:18px;">
+      <input type="checkbox" id="w-sponsor-attivo" ${w.sponsorAttivo ? "checked" : ""}>
+      <span>Aggiungi uno sponsor a questo torneo</span>
+    </label>
+    ${w.sponsorAttivo ? `
+      <div class="campo"><label>Nome sponsor</label><input type="text" id="w-sponsor-nome" value="${escapeHtml(w.sponsorNome)}" placeholder="Es. Pizzeria Da Mario"></div>
+      <div class="campo">
+        <label>Logo sponsor</label>
+        <div class="riga-upload-logo">
+          <div class="anteprima-logo">${w.sponsorLogo ? `<img src="${w.sponsorLogo}">` : `<i class="fa-solid fa-image"></i>`}</div>
+          <input type="file" id="w-sponsor-logo" accept="image/*">
+        </div>
+      </div>
+      <div class="campo"><label>Link (facoltativo)</label><input type="text" id="w-sponsor-link" value="${escapeHtml(w.sponsorLink)}" placeholder="https://..."></div>
+    ` : `<p style="color:var(--ink-faint); font-size:0.85rem;">Il banner comparirà in un angolo discreto della pagina, mai sopra ai contenuti del torneo.</p>`}
+    <div class="wizard-azioni">
+      <button class="btn btn-secondario" id="w-indietro5">Indietro</button>
+      <button class="btn btn-primario" id="w-avanti5">Continua</button>
+    </div>`;
+}
+
+function wizardPasso6(w){
   const squadreValide = w.squadre.map(s => s.trim()).filter(Boolean);
   const formatoLabel = Formati.get(w.formato)?.label || w.formato;
   return `
     <h2>Rivedi e crea</h2>
-    <p class="sottotitolo">Passo 5 di 5</p>
+    <p class="sottotitolo">Passo 6 di 6</p>
     <div class="riepilogo-lista">
       <div class="riepilogo-riga"><span>Nome</span><span>${escapeHtml(w.nome) || "—"}</span></div>
       <div class="riepilogo-riga"><span>Sport</span><span>${w.sport === "Altro" ? escapeHtml(w.sportAltro) || "—" : w.sport}</span></div>
@@ -185,9 +211,10 @@ function wizardPasso5(w){
       <div class="riepilogo-riga"><span>Squadre</span><span>${squadreValide.length}</span></div>
       <div class="riepilogo-riga"><span>Punti V / P / S</span><span>${w.puntiVittoria} / ${w.puntiPareggio} / ${w.puntiSconfitta}</span></div>
       <div class="riepilogo-riga"><span>Titolari per squadra</span><span>${w.numeroTitolari}</span></div>
+      <div class="riepilogo-riga"><span>Sponsor</span><span>${w.sponsorAttivo && w.sponsorNome ? escapeHtml(w.sponsorNome) : "Nessuno"}</span></div>
     </div>
     <div class="wizard-azioni">
-      <button class="btn btn-secondario" id="w-indietro5">Indietro</button>
+      <button class="btn btn-secondario" id="w-indietro6">Indietro</button>
       <button class="btn btn-primario" id="w-crea">Crea torneo</button>
     </div>`;
 }
@@ -284,9 +311,34 @@ function attachWizardHandlers(){
   const indietro4 = document.getElementById("w-indietro4");
   if(indietro4) indietro4.addEventListener("click", () => { w.passo = 3; renderWizard(); });
 
-  // ---- passo 5 ----
+  // ---- passo 5 (sponsor) ----
+  const sponsorAttivo = document.getElementById("w-sponsor-attivo");
+  if(sponsorAttivo) sponsorAttivo.addEventListener("change", () => { w.sponsorAttivo = sponsorAttivo.checked; renderWizard(); });
+  const sponsorLogoInput = document.getElementById("w-sponsor-logo");
+  if(sponsorLogoInput) sponsorLogoInput.addEventListener("change", async () => {
+    if(!sponsorLogoInput.files[0]) return;
+    w.sponsorNome = document.getElementById("w-sponsor-nome")?.value || "";
+    w.sponsorLink = document.getElementById("w-sponsor-link")?.value || "";
+    try{ w.sponsorLogo = await leggiImmagineCompressa(sponsorLogoInput.files[0], 200); }
+    catch{ mostraToast("Impossibile caricare l'immagine.", "errore"); }
+    renderWizard();
+  });
+  const avanti5 = document.getElementById("w-avanti5");
+  if(avanti5) avanti5.addEventListener("click", () => {
+    if(w.sponsorAttivo){
+      w.sponsorNome = document.getElementById("w-sponsor-nome").value.trim();
+      w.sponsorLink = document.getElementById("w-sponsor-link").value.trim();
+      if(!w.sponsorNome){ mostraToast("Inserisci il nome dello sponsor o disattiva l'opzione.", "errore"); return; }
+    }
+    w.passo = 6;
+    renderWizard();
+  });
   const indietro5 = document.getElementById("w-indietro5");
   if(indietro5) indietro5.addEventListener("click", () => { w.passo = 4; renderWizard(); });
+
+  // ---- passo 6 (riepilogo) ----
+  const indietro6 = document.getElementById("w-indietro6");
+  if(indietro6) indietro6.addEventListener("click", () => { w.passo = 5; renderWizard(); });
   const crea = document.getElementById("w-crea");
   if(crea) crea.addEventListener("click", () => {
     const utente = Auth.utenteCorrente();
@@ -303,7 +355,8 @@ function attachWizardHandlers(){
       squadreNomi: squadreValide,
       puntiVittoria: w.puntiVittoria, puntiPareggio: w.puntiPareggio, puntiSconfitta: w.puntiSconfitta,
       numeroTitolari: w.numeroTitolari, durataPartitaMinuti: w.durataPartitaMinuti,
-      criterioSpareggio: w.criterioSpareggio
+      criterioSpareggio: w.criterioSpareggio,
+      sponsor: w.sponsorAttivo ? { nome: w.sponsorNome, logo: w.sponsorLogo, link: w.sponsorLink } : null
     });
     mostraToast("Torneo creato.");
     apriTorneo(nuovoTorneo.id);

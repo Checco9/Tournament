@@ -24,14 +24,29 @@ function renderTorneo(){
     ${torneo.logo ? `<img src="${torneo.logo}" class="logo-sidebar-torneo">` : ""}
     <span>${escapeHtml(torneo.nome)}</span>`;
   document.querySelectorAll(".tab-torneo").forEach(b => b.classList.toggle("attivo", b.dataset.tab === Stato.tab));
+  renderSponsorSidebar(torneo);
 
   const cont = document.getElementById("torneo-contenuto");
   if(Stato.tab === "classifica"){ cont.innerHTML = renderClassificaHTML(torneo); attachClassificaHandlers(torneo); }
   else if(Stato.tab === "calendario"){ cont.innerHTML = renderCalendarioHTML(torneo); attachCalendarioHandlers(torneo); }
   else if(Stato.tab === "squadre"){ cont.innerHTML = renderSquadreHTML(torneo); attachSquadreHandlers(torneo); }
   else if(Stato.tab === "giocatori"){ cont.innerHTML = renderGiocatoriHTML(torneo); attachGiocatoriHandlers(torneo); }
-  else if(Stato.tab === "classifiche"){ cont.innerHTML = renderClassificheIndividualiHTML(torneo); attachClassificheIndividualiHandlers(torneo); }
+  else if(Stato.tab === "campi"){ cont.innerHTML = renderCampiHTML(torneo); attachCampiHandlers(torneo); }
+  else if(Stato.tab === "news"){ cont.innerHTML = renderNewsHTML(torneo); attachNewsHandlers(torneo); }
+  else if(Stato.tab === "statistiche"){ cont.innerHTML = renderStatisticheHTML(torneo); attachStatisticheHandlers(torneo); }
   else if(Stato.tab === "impostazioni"){ cont.innerHTML = renderImpostazioniHTML(torneo); attachImpostazioniHandlers(torneo); }
+}
+
+function renderSponsorSidebar(torneo){
+  const cont = document.getElementById("sponsor-sidebar");
+  if(!torneo.sponsor || !torneo.sponsor.nome){ cont.innerHTML = ""; return; }
+  const s = torneo.sponsor;
+  const contenuto = `
+    ${s.logo ? `<img src="${s.logo}" alt="">` : `<i class="fa-solid fa-shop"></i>`}
+    <div><span class="sponsor-etichetta">Sponsor</span><span class="sponsor-nome">${escapeHtml(s.nome)}</span></div>`;
+  cont.innerHTML = s.link
+    ? `<a href="${escapeHtml(s.link)}" target="_blank" rel="noopener" class="banner-sponsor">${contenuto}</a>`
+    : `<div class="banner-sponsor">${contenuto}</div>`;
 }
 
 /* ================================================================
@@ -276,6 +291,20 @@ function renderImpostazioniHTML(torneo){
       </div>
       <button class="btn btn-secondario" id="imp-salva-regole">Salva regole</button>
     </div>
+    <div class="blocco-impostazioni">
+      <h3>Sponsor</h3>
+      <p class="sottotitolo">Compare come banner discreto nella barra laterale del torneo.</p>
+      <div class="campo"><label style="font-weight:400;">Nome sponsor</label><input type="text" id="imp-sponsor-nome" value="${escapeHtml(torneo.sponsor?.nome || "")}" placeholder="Lascia vuoto per non mostrare nulla"></div>
+      <div class="campo">
+        <label style="font-weight:400;">Logo</label>
+        <div class="riga-upload-logo">
+          <div class="anteprima-logo">${torneo.sponsor?.logo ? `<img src="${torneo.sponsor.logo}">` : `<i class="fa-solid fa-image"></i>`}</div>
+          <input type="file" id="imp-sponsor-logo" accept="image/*">
+        </div>
+      </div>
+      <div class="campo"><label style="font-weight:400;">Link (facoltativo)</label><input type="text" id="imp-sponsor-link" value="${escapeHtml(torneo.sponsor?.link || "")}" placeholder="https://..."></div>
+      <button class="btn btn-secondario" id="imp-salva-sponsor">Salva sponsor</button>
+    </div>
     <div class="blocco-impostazioni zona-pericolo">
       <h3>Elimina torneo</h3>
       <p class="sottotitolo">Azione permanente: squadre, giocatori, calendario e risultati andranno persi.</p>
@@ -315,6 +344,27 @@ function attachImpostazioniHandlers(torneo){
     torneo.criterioSpareggio = document.getElementById("imp-criterio").value;
     Tornei.salva(torneo);
     mostraToast("Regole aggiornate: la classifica è stata ricalcolata.");
+  });
+
+  const sponsorLogoInput = document.getElementById("imp-sponsor-logo");
+  sponsorLogoInput.addEventListener("change", async () => {
+    if(!sponsorLogoInput.files[0]) return;
+    try{
+      if(!torneo.sponsor) torneo.sponsor = { nome: "", logo: null, link: "" };
+      torneo.sponsor.logo = await leggiImmagineCompressa(sponsorLogoInput.files[0], 200);
+      Tornei.salva(torneo);
+      renderTorneo();
+      mostraToast("Logo sponsor aggiornato.");
+    }catch{ mostraToast("Impossibile caricare l'immagine.", "errore"); }
+  });
+
+  document.getElementById("imp-salva-sponsor").addEventListener("click", () => {
+    const nome = document.getElementById("imp-sponsor-nome").value.trim();
+    const link = document.getElementById("imp-sponsor-link").value.trim();
+    torneo.sponsor = nome ? { nome, link, logo: torneo.sponsor?.logo || null } : null;
+    Tornei.salva(torneo);
+    renderTorneo();
+    mostraToast(nome ? "Sponsor aggiornato." : "Sponsor rimosso.");
   });
 
   document.getElementById("imp-elimina-torneo").addEventListener("click", () => {
