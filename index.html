@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -26,11 +27,8 @@
     <section id="vista-auth" class="vista">
       <div class="auth-scena">
         <div class="auth-marchio">
-          <span class="auth-marchio-badge"><i class="fa-solid fa-trophy"></i></span>
-          <div>
-            <h1>Trophy</h1>
-            <p>Crea, organizza e aggiorna i tuoi campionati.</p>
-          </div>
+          <img src="logo-trophy-wordmark.png" alt="Trophy" class="auth-wordmark">
+          <p>Crea, organizza e aggiorna i tuoi campionati.</p>
         </div>
         <div class="auth-card" id="auth-card"></div>
         <div class="auth-link-gruppo">
@@ -44,7 +42,7 @@
     <div id="shell" class="vista">
       <header id="header-app">
         <div class="brand" id="btn-brand">
-          <span class="brand-badge"><i class="fa-solid fa-trophy"></i></span>
+          <img src="icon-192.png" alt="" class="brand-badge">
           <span class="brand-nome">Trophy</span>
         </div>
         <nav id="nav-header-link">
@@ -91,6 +89,7 @@
               <button class="tab-torneo" data-tab="impostazioni"><i class="fa-solid fa-gear"></i> Impostazioni</button>
               <button id="btn-torna-dashboard"><i class="fa-solid fa-arrow-left"></i> Tutti i tornei</button>
               <button id="btn-apri-schermo"><i class="fa-solid fa-tv"></i> Modalità schermo</button>
+              <button id="btn-apri-schermo-finestra"><i class="fa-solid fa-arrow-up-right-from-square"></i> Apri su un altro schermo</button>
               <div id="sponsor-sidebar"></div>
             </nav>
             <div id="torneo-contenuto"></div>
@@ -156,5 +155,6 @@
   <script src="app-statistiche.js"></script>
   <script src="app-partita.js"></script>
   <script src="app-schermo.js"></script>
+  <script src="app-export.js"></script>
 </body>
 </html>

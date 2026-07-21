@@ -87,6 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     apriModalitaSchermo(Stato.torneoId);
   });
+  document.getElementById("btn-apri-schermo-finestra").addEventListener("click", () => {
+    const url = `${location.origin}${location.pathname}?schermo=${Stato.torneoId}`;
+    window.open(url, "_blank", "noopener");
+    mostraToast("Aperta una nuova finestra: spostala sullo schermo/proiettore. Resterà sincronizzata in automatico mentre lavori qui.");
+  });
   document.getElementById("btn-chiudi-schermo").addEventListener("click", chiudiModalitaSchermo);
 
   document.getElementById("chiudi-modale-partita").addEventListener("click", chiudiModalePartita);
@@ -97,9 +102,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if(e.key === "Escape") chiudiModalePartita();
   });
 
+  // Se un'altra finestra/scheda dello stesso browser modifica i dati
+  // (es. l'admin segna un gol in un'altra scheda), la modalità schermo
+  // aperta qui si aggiorna subito, senza aspettare il prossimo cambio slide.
+  window.addEventListener("storage", e => {
+    if(e.key !== DB.CHIAVE) return;
+    const vistaSchermo = document.getElementById("vista-schermo");
+    if(vistaSchermo && vistaSchermo.classList.contains("attiva") && typeof renderSlideSchermo !== "undefined"){
+      renderSlideSchermo();
+    }
+  });
+
   const utente = Auth.utenteCorrente();
+  const parametriUrl = new URLSearchParams(location.search);
+  const schermoDaUrl = parametriUrl.get("schermo");
+
   if(utente){
     entraNellApp();
+    if(schermoDaUrl && typeof apriModalitaSchermo !== "undefined"){
+      apriModalitaSchermo(schermoDaUrl);
+    }
   }else{
     mostraVista("auth");
     renderAuth();
