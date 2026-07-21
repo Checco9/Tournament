@@ -8,7 +8,15 @@
 
 function renderSquadreHTML(torneo){
   const utente = Auth.utenteCorrente();
-  const squadreGlobali = SquadreGlobali.elencoUtente(utente.id);
+  // Protezione: se per qualche motivo il file dati-squadre-globali.js non
+  // fosse caricato (es. file mancante nel deploy), la pagina Squadre deve
+  // continuare a funzionare comunque, solo senza il collegamento cross-torneo.
+  let squadreGlobali = [];
+  try{
+    if(typeof SquadreGlobali !== "undefined") squadreGlobali = SquadreGlobali.elencoUtente(utente.id);
+  }catch(err){
+    console.error("Squadre globali non disponibili:", err);
+  }
 
   const cards = torneo.squadre.map(s => `
     <div class="card-squadra-estesa" data-id="${s.id}" style="--colore-squadra:${s.colore}">
@@ -86,6 +94,7 @@ function attachSquadreHandlers(torneo){
   });
   document.querySelectorAll(".input-globale-squadra").forEach(el => {
     el.addEventListener("change", () => {
+      if(typeof SquadreGlobali === "undefined"){ mostraToast("Funzione non disponibile: manca un file del sito.", "errore"); return; }
       SquadreGlobali.collega(torneo.id, el.dataset.id, el.value || null);
       mostraToast(el.value ? "Squadra collegata: le statistiche all-time si aggiornano da sole." : "Collegamento rimosso.");
     });

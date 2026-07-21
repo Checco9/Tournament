@@ -59,6 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-nuovo-torneo").addEventListener("click", apriWizard);
 
   document.getElementById("btn-nav-squadre-globali").addEventListener("click", () => {
+    if(typeof renderSquadreGlobali === "undefined"){
+      mostraToast("Questa pagina non è disponibile: manca il file app-squadre-globali.js.", "errore");
+      return;
+    }
     mostraSottoVista("squadre-globali");
     renderSquadreGlobali();
   });
@@ -75,6 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
     mostraSottoVista("dashboard");
     renderDashboard();
   });
+
+  document.getElementById("btn-apri-schermo").addEventListener("click", () => {
+    if(typeof apriModalitaSchermo === "undefined"){
+      mostraToast("Funzione non disponibile: manca il file app-schermo.js.", "errore");
+      return;
+    }
+    apriModalitaSchermo(Stato.torneoId);
+  });
+  document.getElementById("btn-chiudi-schermo").addEventListener("click", chiudiModalitaSchermo);
 
   document.getElementById("chiudi-modale-partita").addEventListener("click", chiudiModalePartita);
   document.getElementById("modale-partita").addEventListener("click", e => {

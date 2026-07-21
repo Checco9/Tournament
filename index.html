@@ -90,6 +90,7 @@
               <button class="tab-torneo" data-tab="statistiche"><i class="fa-solid fa-chart-simple"></i> Statistiche</button>
               <button class="tab-torneo" data-tab="impostazioni"><i class="fa-solid fa-gear"></i> Impostazioni</button>
               <button id="btn-torna-dashboard"><i class="fa-solid fa-arrow-left"></i> Tutti i tornei</button>
+              <button id="btn-apri-schermo"><i class="fa-solid fa-tv"></i> Modalità schermo</button>
               <div id="sponsor-sidebar"></div>
             </nav>
             <div id="torneo-contenuto"></div>
@@ -114,6 +115,13 @@
       </main>
     </div>
   </div>
+
+  <!-- ============ MODALITÀ MAXI-SCHERMO ============ -->
+  <section id="vista-schermo">
+    <button id="btn-chiudi-schermo"><i class="fa-solid fa-xmark"></i></button>
+    <div id="schermo-intestazione"></div>
+    <div id="schermo-contenuto"></div>
+  </section>
 
   <!-- ============ MODALE: gestione partita ============ -->
   <div id="modale-partita" class="overlay">
@@ -147,5 +155,6 @@
   <script src="app-news.js"></script>
   <script src="app-statistiche.js"></script>
   <script src="app-partita.js"></script>
+  <script src="app-schermo.js"></script>
 </body>
 </html>

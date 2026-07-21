@@ -93,6 +93,7 @@ function renderModalePartita(){
     <div class="sezione-modale">
       <h4>Eventi partita</h4>
       <div class="risultato-live">Risultato attuale: <strong>${golCalcolati.haEventiGol ? `${golCalcolati.golCasa} - ${golCalcolati.golTrasferta}` : "—"}</strong>${golCalcolati.haEventiGol ? "" : `<span class="hint-formazioni">(nessun evento gol: usa il risultato rapido qui sotto)</span>`}</div>
+      <p class="hint-formazioni" style="display:block; margin-bottom:12px;"><i class="fa-solid fa-circle-info"></i> Un giocatore compare tra i marcatori solo se aggiungi un evento "Gol" a suo nome qui sotto — il risultato rapido da solo non basta.</p>
 
       <div class="form-evento" id="form-evento">
         <select id="ev-tipo">${Object.entries(TIPI_EVENTO).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>
