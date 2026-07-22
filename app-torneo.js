@@ -60,14 +60,19 @@ function tabellaClassificaHTML(classifica){
   const righe = classifica.map((r, i) => `
     <tr>
       <td class="cella-nome"><span class="pos-medaglia ${i === 0 && r.punti > 0 ? "oro" : ""}">${i + 1}</span>${escapeHtml(r.nome)}</td>
-      <td class="num">${r.giocate}</td><td class="num">${r.vinte}</td><td class="num">${r.pareggi}</td><td class="num">${r.perse}</td>
-      <td class="num">${r.golFatti}</td><td class="num">${r.golSubiti}</td><td class="num">${r.dr > 0 ? "+" + r.dr : r.dr}</td>
-      <td class="num" style="font-weight:700;">${r.punti}</td>
+      <td class="num" data-label="PT" data-principale="true">${r.punti}</td>
+      <td class="num" data-label="G">${r.giocate}</td>
+      <td class="num" data-label="V">${r.vinte}</td>
+      <td class="num" data-label="P">${r.pareggi}</td>
+      <td class="num" data-label="S">${r.perse}</td>
+      <td class="num" data-label="GF">${r.golFatti}</td>
+      <td class="num" data-label="GS">${r.golSubiti}</td>
+      <td class="num" data-label="DR">${r.dr > 0 ? "+" + r.dr : r.dr}</td>
     </tr>`).join("");
   return `
     <div style="overflow-x:auto;">
       <table class="tabella-dati">
-        <thead><tr><th>Squadra</th><th class="num">G</th><th class="num">V</th><th class="num">P</th><th class="num">S</th><th class="num">GF</th><th class="num">GS</th><th class="num">DR</th><th class="num">PT</th></tr></thead>
+        <thead><tr><th>Squadra</th><th class="num">PT</th><th class="num">G</th><th class="num">V</th><th class="num">P</th><th class="num">S</th><th class="num">GF</th><th class="num">GS</th><th class="num">DR</th></tr></thead>
         <tbody>${righe}</tbody>
       </table>
     </div>`;
@@ -132,10 +137,16 @@ function renderClassificaHTML(torneo){
       </div>`;
   }
 
-  return `<div class="pannello-testata"><h2>${titolo}</h2></div>${corpo}`;
+  return `
+    <div class="pannello-testata">
+      <h2>${titolo}</h2>
+      <button class="btn btn-secondario" id="btn-esporta-classifica"><i class="fa-solid fa-file-pdf"></i> Esporta PDF</button>
+    </div>${corpo}`;
 }
 
 function attachClassificaHandlers(torneo){
+  document.getElementById("btn-esporta-classifica").addEventListener("click", () => esportaClassificaPDF(torneo));
+
   document.querySelectorAll(".bracket-match.cliccabile").forEach(el => {
     el.addEventListener("click", () => apriModalePartita(torneo.id, el.dataset.id));
   });
@@ -208,7 +219,10 @@ function renderCalendarioHTML(torneo){
     </div>` : "";
 
   return `
-    <div class="pannello-testata"><h2>Calendario</h2></div>
+    <div class="pannello-testata">
+      <h2>Calendario</h2>
+      <button class="btn btn-secondario" id="btn-esporta-calendario"><i class="fa-solid fa-file-pdf"></i> Esporta PDF</button>
+    </div>
     ${chiaviUniche.length > 0 ? `<div class="filtro-giornate">${chips}</div>` : ""}
     <div class="elenco-partite">
       ${righe || `<div class="stato-vuoto"><i class="fa-solid fa-calendar-days"></i><p>Nessuna partita in calendario ancora.</p></div>`}
@@ -217,6 +231,8 @@ function renderCalendarioHTML(torneo){
 }
 
 function attachCalendarioHandlers(torneo){
+  document.getElementById("btn-esporta-calendario").addEventListener("click", () => esportaCalendarioPDF(torneo));
+
   document.querySelectorAll(".chip-giornata").forEach(el => {
     el.addEventListener("click", () => { Stato.filtroFaseCalendario = el.dataset.f; renderTorneo(); });
   });

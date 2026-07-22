@@ -249,6 +249,7 @@ input:focus, select:focus, button:focus-visible{ outline: 2px solid var(--accent
 .tabella-dati td.cella-nome{ font-family: var(--font-body); font-weight: 600; }
 .tabella-dati tr:last-child td{ border-bottom: none; }
 .tabella-dati th.num, .tabella-dati td.num{ text-align: center; }
+.tabella-dati td[data-principale]{ font-weight: 700; color: var(--accent-dark); }
 .pos-medaglia{ display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; background: var(--paper); color: var(--ink-soft); margin-right: 8px; }
 .pos-medaglia.oro{ background: #F4E3B2; color: #6B4E00; }
 
@@ -566,10 +567,44 @@ textarea{
   .tab-torneo{ flex: none; white-space: nowrap; }
   #btn-torna-dashboard{ margin: 0; padding: 10px 12px; border: none; flex: none; white-space: nowrap; }
   #sponsor-sidebar{ display: none; }
-  .tabella-dati{ font-size: 0.78rem; }
   .tabella-dati th, .tabella-dati td{ padding: 10px 6px; }
   .riga-partita .squadre{ order: 3; width: 100%; }
   .colonne-formazioni{ grid-template-columns: 1fr; }
+}
+
+/* ---------- Classifica: da tabella a schede sotto i 640px ----------
+   Sotto questa larghezza, 9 colonne numeriche non stanno più in modo
+   leggibile: ogni riga diventa una piccola scheda con nome+punti in
+   evidenza e le altre statistiche come pillole che vanno a capo. */
+@media (max-width: 640px){
+  .tabella-dati{ border-radius: var(--radius-md); }
+  .tabella-dati thead{ display: none; }
+  .tabella-dati, .tabella-dati tbody{ display: block; width: 100%; }
+  .tabella-dati tr{
+    display: flex; flex-wrap: wrap; align-items: center;
+    column-gap: 8px; row-gap: 8px;
+    padding: 14px 16px; border-bottom: 1px solid var(--line);
+  }
+  .tabella-dati td{ padding: 0; border: none; font-size: 0.8rem; }
+  .tabella-dati td.cella-nome{
+    order: 1; flex: 1 1 auto; min-width: 0;
+    font-size: 0.98rem; display: flex; align-items: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tabella-dati td[data-principale]{
+    order: 2; flex: none; font-size: 1.3rem; font-weight: 800;
+    background: var(--accent-soft); color: var(--accent-dark);
+    padding: 3px 12px; border-radius: 100px;
+  }
+  .tabella-dati td[data-principale]::before{ display: none; }
+  .tabella-dati td:not(.cella-nome):not([data-principale]){
+    order: 3; flex: none;
+    background: var(--paper); color: var(--ink-soft);
+    padding: 4px 9px; border-radius: 100px; font-size: 0.74rem;
+  }
+  .tabella-dati td:not(.cella-nome):not([data-principale])::before{
+    content: attr(data-label); color: var(--ink-faint); font-weight: 600; margin-right: 4px;
+  }
 }
 @media (max-width: 520px){
   #header-app{ padding-left: 16px; padding-right: 16px; }
