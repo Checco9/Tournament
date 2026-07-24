@@ -16,12 +16,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div id="app">
+
+    <!-- ============ CARICAMENTO INIZIALE ============ -->
+    <section id="vista-caricamento">
+      <div class="caricamento-spinner"></div>
+    </section>
 
     <!-- ============ AUTENTICAZIONE ============ -->
     <section id="vista-auth" class="vista">
@@ -132,6 +138,7 @@
 
   <div id="toast-contenitore"></div>
 
+  <script src="supabase-client.js"></script>
   <script src="core-storage.js"></script>
   <script src="core-auth.js"></script>
   <script src="core-utils.js"></script>

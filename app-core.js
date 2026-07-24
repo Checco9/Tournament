@@ -20,6 +20,7 @@ const Stato = {
 const RUOLI_SUGGERITI = ["Portiere", "Difensore", "Centrocampista", "Attaccante"];
 
 function mostraVista(id){
+  document.getElementById("vista-caricamento").style.display = "none";
   document.getElementById("vista-auth").classList.toggle("attiva", id === "auth");
   document.getElementById("shell").classList.toggle("attiva", id === "shell");
 }
@@ -38,14 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btn-reset-dati").addEventListener("click", () => {
-    if(!confirm("Questo cancella TUTTI gli account e i tornei salvati su questo browser (non è recuperabile). Continuare?")) return;
+    if(!confirm("Questo cancella i tornei salvati su questo dispositivo in modalità ospite (non tocca il tuo account, che è gestito separatamente). Continuare?")) return;
     localStorage.removeItem(DB.CHIAVE);
     mostraToast("Dati locali cancellati.");
     setTimeout(() => location.reload(), 500);
   });
 
-  document.getElementById("btn-logout").addEventListener("click", () => {
-    Auth.esci();
+  document.getElementById("btn-logout").addEventListener("click", async () => {
+    await Auth.esci();
     Stato.authModo = "login";
     mostraVista("auth");
     renderAuth();
@@ -113,17 +114,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const utente = Auth.utenteCorrente();
   const parametriUrl = new URLSearchParams(location.search);
   const schermoDaUrl = parametriUrl.get("schermo");
 
-  if(utente){
-    entraNellApp();
-    if(schermoDaUrl && typeof apriModalitaSchermo !== "undefined"){
-      apriModalitaSchermo(schermoDaUrl);
+  // L'avvio ora aspetta la risposta di Supabase (c'è una sessione salvata?
+  // token ancora valido?) prima di decidere cosa mostrare. Nel frattempo
+  // teniamo la schermata di login/caricamento visibile invece di lasciare
+  // la pagina vuota per un istante.
+  Auth.inizializza().then(utente => {
+    if(utente){
+      entraNellApp();
+      if(schermoDaUrl && typeof apriModalitaSchermo !== "undefined"){
+        apriModalitaSchermo(schermoDaUrl);
+      }
+    }else{
+      mostraVista("auth");
+      renderAuth();
     }
-  }else{
+  }).catch(err => {
+    console.error("Errore di avvio:", err);
     mostraVista("auth");
     renderAuth();
-  }
+    mostraToast("Problema di connessione al server. Riprova tra poco.", "errore");
+  });
 });

@@ -48,6 +48,21 @@ h1, h2, h3, h4, h5{ font-family: var(--font-display); font-weight: 700; margin: 
 p{ margin: 0; }
 button{ font-family: var(--font-body); }
 
+/* ---------- schermata di caricamento iniziale (in attesa di Supabase) ---------- */
+#vista-caricamento{
+  position: fixed; inset: 0; z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper);
+}
+.caricamento-spinner{
+  width: 34px; height: 34px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: giracaricamento .7s linear infinite;
+}
+@keyframes giracaricamento{ to{ transform: rotate(360deg); } }
+
 /* ---------- FIX: le viste principali devono essere nascoste finché
    non hanno la classe "attiva". Le regole per-ID sotto (#vista-auth,
    #shell) NON devono mai impostare "display" senza questa condizione,

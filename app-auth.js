@@ -11,20 +11,20 @@ function renderAuth(){
     <p class="sottotitolo">Bentornato: inserisci le tue credenziali.</p>
     <div id="area-errore"></div>
     <form id="form-auth">
-      <div class="campo"><label>Email</label><input type="email" id="input-email" required></div>
-      <div class="campo"><label>Password</label><input type="password" id="input-password" required></div>
-      <button type="submit" class="btn btn-primario btn-blocco">Accedi</button>
+      <div class="campo"><label>Email</label><input type="email" id="input-email" required autocomplete="email"></div>
+      <div class="campo"><label>Password</label><input type="password" id="input-password" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-primario btn-blocco" id="btn-submit-auth">Accedi</button>
     </form>
     <p class="auth-switch">Non hai un account? <button id="switch-auth">Registrati</button></p>
   ` : `
     <h2>Crea account</h2>
-    <p class="sottotitolo">Salvato solo su questo dispositivo, per ora.</p>
+    <p class="sottotitolo">Il tuo account funziona su qualsiasi dispositivo — i tornei, per ora, restano salvati su questo (lo stiamo per cambiare).</p>
     <div id="area-errore"></div>
     <form id="form-auth">
-      <div class="campo"><label>Nome</label><input type="text" id="input-nome" required></div>
-      <div class="campo"><label>Email</label><input type="email" id="input-email" required></div>
-      <div class="campo"><label>Password</label><input type="password" id="input-password" required></div>
-      <button type="submit" class="btn btn-primario btn-blocco">Crea account</button>
+      <div class="campo"><label>Nome</label><input type="text" id="input-nome" required autocomplete="name"></div>
+      <div class="campo"><label>Email</label><input type="email" id="input-email" required autocomplete="email"></div>
+      <div class="campo"><label>Password</label><input type="password" id="input-password" required minlength="6" autocomplete="new-password"></div>
+      <button type="submit" class="btn btn-primario btn-blocco" id="btn-submit-auth">Crea account</button>
     </form>
     <p class="auth-switch">Hai già un account? <button id="switch-auth">Accedi</button></p>
   `;
@@ -34,18 +34,37 @@ function renderAuth(){
     renderAuth();
   });
 
-  document.getElementById("form-auth").addEventListener("submit", e => {
+  document.getElementById("form-auth").addEventListener("submit", async e => {
     e.preventDefault();
     const email = document.getElementById("input-email").value;
     const password = document.getElementById("input-password").value;
+    const bottone = document.getElementById("btn-submit-auth");
+    const areaErrore = document.getElementById("area-errore");
+
+    areaErrore.innerHTML = "";
+    bottone.disabled = true;
+    bottone.textContent = modo === "login" ? "Accesso in corso..." : "Creazione account...";
+
     const risultato = modo === "login"
-      ? Auth.accedi(email, password)
-      : Auth.registra(document.getElementById("input-nome").value, email, password);
+      ? await Auth.accedi(email, password)
+      : await Auth.registra(document.getElementById("input-nome").value, email, password);
 
     if(!risultato.ok){
-      document.getElementById("area-errore").innerHTML = `<div class="errore-form">${escapeHtml(risultato.errore)}</div>`;
+      areaErrore.innerHTML = `<div class="errore-form">${escapeHtml(risultato.errore)}</div>`;
+      bottone.disabled = false;
+      bottone.textContent = modo === "login" ? "Accedi" : "Crea account";
       return;
     }
+
+    if(risultato.richiedeConferma){
+      areaErrore.innerHTML = `<div class="errore-form" style="background:var(--accent-soft); color:var(--accent-dark);">
+        Account creato! Controlla la tua email (anche lo spam) e clicca il link di conferma prima di accedere.
+      </div>`;
+      bottone.disabled = false;
+      bottone.textContent = "Crea account";
+      return;
+    }
+
     entraNellApp();
   });
 }

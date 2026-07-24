@@ -1,9 +1,12 @@
 /* ============================================================
    CORE-STORAGE.JS
-   Unico punto di contatto con localStorage. Quando avrai un vero
-   backend, riscrivi solo questo file (fetch API al posto di
-   localStorage): tutto il resto dell'app resta invariato perché
-   passa sempre da DB.getState()/DB.setState().
+   Punto di contatto con localStorage per i dati che, per ora,
+   restano sul dispositivo: tornei, preferiti, squadre globali.
+
+   L'autenticazione (login/registrazione) è passata a Supabase — vedi
+   core-auth.js — quindi qui non c'è più bisogno di gestire utenti o
+   password. Questo file sparirà quando anche tornei/preferiti/squadre
+   globali verranno spostati su Supabase (prossimo passo del piano).
    ============================================================ */
 
 const DB = (() => {
@@ -11,9 +14,8 @@ const DB = (() => {
 
   function statoIniziale(){
     return {
-      utenti: [],            // { id, nome, email, passwordCifrata }
-      sessioneUtenteId: null,
       preferiti: {},          // { [utenteId]: [torneoId, ...] }
+      squadreGlobali: [],     // { id, proprietarioId, nome, logo, colore } — squadre "cross-torneo"
       tornei: []
     };
   }
